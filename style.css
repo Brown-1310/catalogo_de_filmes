@@ -1,0 +1,56 @@
+/* Estilo base da página */
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+/* Centraliza e limita o conteúdo */
+.container {
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+/* Campo de busca */
+#searchInput {
+  padding: 10px;
+  width: 60%;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+/* Botão de busca */
+#searchBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Container dos filmes encontrados */
+#moviesContainer {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Card de cada filme */
+.movie {
+  width: 200px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Imagem do filme */
+.movie img {
+  width: 100%;
+}
+
+/* Informações do filme */
+.movie-info {
+  padding: 10px;
+}
