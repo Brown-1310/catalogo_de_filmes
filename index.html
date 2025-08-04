@@ -7,6 +7,19 @@
   <!-- Linka o arquivo de estilos externo -->
   <link rel="stylesheet" href="style.css" />
 </head>
+
+<!-- Modal escondido por padrão -->
+<div id="movieModal" class="modal hidden">
+  <div class="modal-content">
+    <span id="closeModal" class="close">&times;</span>
+    <img id="modalPoster" src="" alt="" />
+    <h2 id="modalTitle"></h2>
+    <p><strong>Lançamento:</strong> <span id="modalReleaseDate"></span></p>
+    <p><strong>Nota:</strong> <span id="modalRating"></span>/10</p>
+    <p id="modalOverview"></p>
+  </div>
+</div>
+
 <body>
   <div class="container">
     <h1>Catálogo de Filmes</h1>
