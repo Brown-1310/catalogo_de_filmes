@@ -102,3 +102,17 @@ body {
   object-fit: contain;
   margin-bottom: 15px;
 }
+
+.favorite-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: gray;
+  margin-top: 10px;
+}
+
+.favorite-btn.favorited {
+  color: red;
+}
+

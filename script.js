@@ -52,24 +52,64 @@ function displayMovies(movies) {
       : 'https://via.placeholder.com/200x300?text=Sem+Imagem';
 
     // Define o conteúdo do card do filme
+    // HTML do card do filme
     div.innerHTML = `
       <img src="${poster}" alt="${movie.title}" />
       <div class="movie-info">
         <h3>${movie.title}</h3>
         <p>${movie.release_date ? movie.release_date.substring(0, 4) : 'Ano desconhecido'}</p>
         <p>${movie.overview ? movie.overview.substring(0, 100) + '...' : 'Sem descrição.'}</p>
+        <button class="favorite-btn" data-id="${movie.id}">❤️</button>
       </div>
     `;
-    
+
     // Adiciona evento de clique para abrir o modal com mais detalhes
     div.addEventListener('click', () => {
       openModal(movie);
+    });
+
+    // Evento: favorito
+    const favoriteBtn = div.querySelector('.favorite-btn');
+    if (isFavorited(movie.id)) {
+      favoriteBtn.classList.add('favorited');
+    }
+
+    favoriteBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Não abre o modal ao clicar no coração
+      let favorites = getFavorites();
+
+      if (favorites.includes(movie.id)) {
+        favorites = favorites.filter(id => id !== movie.id);
+        favoriteBtn.classList.remove('favorited');
+      } else {
+        favorites.push(movie.id);
+        favoriteBtn.classList.add('favorited');
+      }
+
+      saveFavorites(favorites);
     });
 
     // Adiciona o card na página
     moviesContainer.appendChild(div);
   });
 
+}
+
+// Recupera os favoritos do localStorage
+function getFavorites() {
+  const stored = localStorage.getItem('favorites');
+  return stored ? JSON.parse(stored) : [];
+}
+
+// Salva os favoritos no localStorage
+function saveFavorites(favorites) {
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+// Verifica se o filme está entre os favoritos
+function isFavorited(id) {
+  const favorites = getFavorites();
+  return favorites.includes(id);
 }
 
 // Seleciona os elementos do modal
