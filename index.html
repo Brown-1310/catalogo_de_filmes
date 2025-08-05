@@ -7,35 +7,31 @@
   <!-- Linka o arquivo de estilos externo -->
   <link rel="stylesheet" href="style.css" />
 </head>
-
-<!-- Modal escondido por padrão -->
-<div id="movieModal" class="modal hidden">
-  <div class="modal-content">
-    <span id="closeModal" class="close">&times;</span>
-    <img id="modalPoster" src="" alt="" />
-    <h2 id="modalTitle"></h2>
-    <p><strong>Lançamento:</strong> <span id="modalReleaseDate"></span></p>
-    <p><strong>Nota:</strong> <span id="modalRating"></span>/10</p>
-    <p id="modalOverview"></p>
-  </div>
-</div>
-
 <body>
+
+  <!-- Modal escondido por padrão -->
+  <div id="movieModal" class="modal hidden">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <img id="modalPoster" src="" alt="" />
+      <h2 id="modalTitle"></h2>
+      <p><strong>Lançamento:</strong> <span id="modalReleaseDate"></span></p>
+      <p><strong>Nota:</strong> <span id="modalRating"></span>/10</p>
+      <p id="modalOverview"></p>
+    </div>
+  </div>
+
   <div class="container">
     <h1>Catálogo de Filmes</h1>
-
     <!-- Campo onde o usuário digita o nome do filme -->
     <input type="text" id="searchInput" placeholder="Buscar filmes..." />
-    
     <!-- Botão que inicia a busca -->
     <button id="searchBtn">Buscar</button>
-
-    <!-- Div onde os resultados dos filmes serão exibidos -->
-    <div id="moviesContainer"></div>
-
     <p id="loadingMessage" style="display: none;">Carregando filmes...</p>
-
+    <!-- Div onde os resultados dos filmes serão exibidos -->
   </div>
+
+  <div id="moviesContainer"></div>
 
   <!-- Script JS responsável por buscar os dados e exibir os filmes -->
   <script src="script.js"></script>

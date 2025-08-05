@@ -59,7 +59,11 @@ function displayMovies(movies) {
         <h3>${movie.title}</h3>
         <p>${movie.release_date ? movie.release_date.substring(0, 4) : 'Ano desconhecido'}</p>
         <p>${movie.overview ? movie.overview.substring(0, 100) + '...' : 'Sem descrição.'}</p>
-        <button class="favorite-btn" data-id="${movie.id}">❤️</button>
+        <button class="favorite-btn" data-id="${movie.id}">
+          <svg class="icon-heart" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.8 4.6c-1.6-1.5-4.2-1.4-5.8.1L12 7.7 9 4.7C7.4 3.2 4.8 3.1 3.2 4.6c-1.6 1.5-1.7 4.1-.1 5.7l3.5 3.6L12 21l5.4-7.1 3.5-3.6c1.5-1.5 1.5-4.1-.1-5.7z"></path>
+          </svg>
+        </button>
       </div>
     `;
 
@@ -83,7 +87,11 @@ function displayMovies(movies) {
         favoriteBtn.classList.remove('favorited');
       } else {
         favorites.push(movie.id);
-        favoriteBtn.classList.add('favorited');
+        favoriteBtn.classList.add('favorited', 'animate');
+        // Remove a animação após a execução para permitir nova animação no futuro
+        setTimeout(() => {
+        favoriteBtn.classList.remove('animate');
+        }, 400); // tempo igual à duração da animação
       }
 
       saveFavorites(favorites);

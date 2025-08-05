@@ -7,7 +7,6 @@ body {
 
 /* Centraliza e limita o conteúdo */
 .container {
-  max-width: 800px;
   margin: auto;
   text-align: center;
 }
@@ -27,22 +26,35 @@ body {
   cursor: pointer;
 }
 
-/* Container dos filmes encontrados */
+/* Mensagem de carregamento */
+#loadingMessage {
+  font-style: italic;
+  color: #555;
+  margin-top: 20px;
+}
+
+/* Container dos filmes */
 #moviesContainer {
   margin-top: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
+  padding: 0 20px;
 }
 
 /* Card de cada filme */
 .movie {
-  width: 200px;
+  width: 100%;
+  max-width: 250px; /* ou 200px se quiser mais compacto */
   background: white;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.movie:hover {
+  transform: scale(1.02);
 }
 
 /* Imagem do filme */
@@ -55,6 +67,34 @@ body {
   padding: 10px;
 }
 
+/* Botão de favorito com SVG */
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  transition: transform 0.2s ease;
+  margin-top: 10px;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Ícone SVG do coração */
+.icon-heart {
+  width: 24px;
+  height: 24px;
+  stroke: gray;
+  fill: none;
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+/* Coração preenchido */
+.favorite-btn.favorited .icon-heart {
+  fill: red;
+  stroke: red;
+}
 
 /* Modal (fundo escuro) */
 .modal {
@@ -103,16 +143,26 @@ body {
   margin-bottom: 15px;
 }
 
-.favorite-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: gray;
-  margin-top: 10px;
+/* Animação de pulsar */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  75% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
-.favorite-btn.favorited {
-  color: red;
+/* Classe de animação no coração */
+.favorite-btn.animate {
+  animation: pulse 0.4s ease;
 }
-
