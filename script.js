@@ -48,7 +48,7 @@ function displayMovies(movies) {
 
     // Monta o caminho da imagem (ou usa imagem genérica se não tiver)
     const poster = movie.poster_path
-      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
       : 'https://via.placeholder.com/200x300?text=Sem+Imagem';
 
     // Define o conteúdo do card do filme
