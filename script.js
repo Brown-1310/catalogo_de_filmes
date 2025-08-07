@@ -10,6 +10,10 @@ let showOnlyFavorites = false;
 const moviesContainer = document.getElementById('moviesContainer'); // Onde os filmes serão exibidos
 let lastSearchQuery = ''; //Para salvar a busca
 
+//Buscar filmes por genero
+const genreFilter = document.getElementById('genreFilter');
+let genreMap = {}; // para mapear ID => Nome
+
 // Busca com autocompletar
 let debounceTimeout;
 
@@ -48,6 +52,14 @@ async function searchMovies(query) {
 
 // Função que mostra os filmes encontrados na tela
 function displayMovies(movies) {
+  const selectedGenre = genreFilter.value;
+  
+  if (selectedGenre) {
+    movies = movies.filter(movie =>
+      movie.genre_ids && movie.genre_ids.includes(parseInt(selectedGenre))
+    );
+  }
+
   moviesContainer.innerHTML = ''; // Limpa os resultados anteriores
 
   //Botão favoritos
@@ -73,6 +85,11 @@ function displayMovies(movies) {
       ? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
       : 'https://via.placeholder.com/200x300?text=Sem+Imagem';
 
+    const genreNames = movie.genre_ids?.map(id => genreMap[id])
+      .filter(Boolean)
+      .join(', ') || 'Sem gênero';
+
+
     // Define o conteúdo do card do filme
     // HTML do card do filme
     div.innerHTML = `
@@ -81,6 +98,7 @@ function displayMovies(movies) {
         <h3>${movie.title}</h3>
         <p>${movie.release_date ? movie.release_date.substring(0, 4) : 'Ano desconhecido'}</p>
         <p>${movie.overview ? movie.overview.substring(0, 100) + '...' : 'Sem descrição.'}</p>
+        <p><small><strong>Gêneros:</strong> ${genreNames}</small></p>
         <button class="favorite-btn" data-id="${movie.id}">
           <svg class="icon-heart" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20.8 4.6c-1.6-1.5-4.2-1.4-5.8.1L12 7.7 9 4.7C7.4 3.2 4.8 3.1 3.2 4.6c-1.6 1.5-1.7 4.1-.1 5.7l3.5 3.6L12 21l5.4-7.1 3.5-3.6c1.5-1.5 1.5-4.1-.1-5.7z"></path>
@@ -124,6 +142,15 @@ function displayMovies(movies) {
   });
 
 }
+
+genreFilter.addEventListener('change', () => {
+  const query = searchInput.value.trim();
+  if (query) {
+    searchMovies(query); // refaz a busca com o novo filtro
+  } else if (showOnlyFavorites) {
+    fetchFavoriteMovies(); // aplica filtro nos favoritos também
+  }
+});
 
 // Recupera os favoritos do localStorage
 function getFavorites() {
@@ -210,4 +237,28 @@ async function fetchFavoriteMovies() {
     console.error('Erro ao buscar filmes favoritos:', error);
   }
 }
+
+async function fetchGenres() {
+  const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=pt-BR`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    // Mapeia os gêneros por ID
+    data.genres.forEach(genre => {
+      genreMap[genre.id] = genre.name;
+
+      // Cria uma opção no select
+      const option = document.createElement('option');
+      option.value = genre.id;
+      option.textContent = genre.name;
+      genreFilter.appendChild(option);
+    });
+  } catch (error) {
+    console.error('Erro ao carregar gêneros:', error);
+  }
+}
+
+fetchGenres(); // chama ao iniciar a página
 
