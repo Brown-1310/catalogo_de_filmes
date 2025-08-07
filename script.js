@@ -10,15 +10,26 @@ let showOnlyFavorites = false;
 const moviesContainer = document.getElementById('moviesContainer'); // Onde os filmes serão exibidos
 let lastSearchQuery = ''; //Para salvar a busca
 
-// Adiciona evento ao botão de busca
-searchBtn.addEventListener('click', () => {
-  const query = searchInput.value.trim(); // Pega o texto digitado, removendo espaços
+// Busca com autocompletar
+let debounceTimeout;
 
-  if (query) {
-    lastSearchQuery = query;
-    searchMovies(query); // Se houver algo digitado, busca os filmes
-  }
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.trim();
+
+  clearTimeout(debounceTimeout); // cancela o último
+
+  debounceTimeout = setTimeout(() => {
+    if (query) {
+      lastSearchQuery = query;
+      showOnlyFavorites = false; // garante que estamos em modo normal
+      toggleFavoritesBtn.textContent = 'Favoritos';
+      searchMovies(query);
+    } else {
+      moviesContainer.innerHTML = '<p>Digite algo para buscar filmes.</p>';
+    }
+  }, 500); // tempo de espera (500ms após parar de digitar)
 });
+
 
 // Função que busca filmes na API da TMDB com base no texto digitado
 async function searchMovies(query) {
