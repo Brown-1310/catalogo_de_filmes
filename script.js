@@ -4,13 +4,18 @@ const API_KEY = 'ad35b0fff0222493d5bf26f453058cf9';
 // Captura os elementos da página HTML
 const searchInput = document.getElementById('searchInput');     // Campo de texto
 const searchBtn = document.getElementById('searchBtn');         // Botão de busca
+// Botão favoritos
+const toggleFavoritesBtn = document.getElementById('toggleFavoritesBtn');
+let showOnlyFavorites = false;
 const moviesContainer = document.getElementById('moviesContainer'); // Onde os filmes serão exibidos
+let lastSearchQuery = ''; //Para salvar a busca
 
 // Adiciona evento ao botão de busca
 searchBtn.addEventListener('click', () => {
   const query = searchInput.value.trim(); // Pega o texto digitado, removendo espaços
 
   if (query) {
+    lastSearchQuery = query;
     searchMovies(query); // Se houver algo digitado, busca os filmes
   }
 });
@@ -34,6 +39,12 @@ async function searchMovies(query) {
 function displayMovies(movies) {
   moviesContainer.innerHTML = ''; // Limpa os resultados anteriores
 
+  //Botão favoritos
+  if (showOnlyFavorites) {
+    const favorites = getFavorites();
+    movies = movies.filter(movie => favorites.includes(movie.id));
+  }
+
   // Se nenhum filme for encontrado
   if (movies.length === 0) {
     moviesContainer.innerHTML = '<p>Nenhum filme encontrado.</p>';
@@ -48,7 +59,7 @@ function displayMovies(movies) {
 
     // Monta o caminho da imagem (ou usa imagem genérica se não tiver)
     const poster = movie.poster_path
-      ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
+      ? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
       : 'https://via.placeholder.com/200x300?text=Sem+Imagem';
 
     // Define o conteúdo do card do filme
@@ -150,3 +161,42 @@ function openModal(movie) {
   // Exibe o modal
   modal.classList.remove('hidden');
 }
+
+toggleFavoritesBtn.addEventListener('click', () => {
+  showOnlyFavorites = !showOnlyFavorites;
+
+  // Atualiza texto do botão
+  toggleFavoritesBtn.textContent = showOnlyFavorites
+    ? 'Voltar'
+    : 'Favoritos';
+
+  // Rebusca os filmes com base no termo atual
+  const query = searchInput.value.trim();
+  
+  if (showOnlyFavorites) {
+  fetchFavoriteMovies(); // mostra todos os favoritos
+  } else if (lastSearchQuery) {
+  searchInput.value = lastSearchQuery;
+  searchMovies(lastSearchQuery);
+  } else {
+  moviesContainer.innerHTML = '<p>Digite algo na busca para ver filmes.</p>';
+  }
+});
+
+async function fetchFavoriteMovies() {
+  const favorites = getFavorites();
+
+  // Busca os detalhes de cada filme pelo ID
+  const moviePromises = favorites.map(id => 
+    fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=pt-BR`)
+      .then(res => res.json())
+  );
+
+  try {
+    const movies = await Promise.all(moviePromises);
+    displayMovies(movies);
+  } catch (error) {
+    console.error('Erro ao buscar filmes favoritos:', error);
+  }
+}
+
